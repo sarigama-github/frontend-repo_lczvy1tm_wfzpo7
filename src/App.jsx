@@ -8,6 +8,7 @@ import Tech from './components/Tech'
 import Testimonials from './components/Testimonials'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
+import CursorGlow from './components/CursorGlow'
 
 function App() {
   const servicesRef = useRef(null)
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#0B0B0E] text-white selection:bg-[#6A00FF]/30">
+      <CursorGlow />
       <Navbar />
       <main>
         <Hero onScrollToServices={handleScrollToServices} />

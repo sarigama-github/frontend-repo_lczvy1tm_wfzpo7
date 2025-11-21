@@ -3,9 +3,7 @@
 > vite
 
 
-  VITE v5.4.20  ready in 314 ms
+  VITE v5.4.20  ready in 207 ms
 
   ➜  Local:   http://localhost:3000/
   ➜  Network: http://172.20.12.135:3000/
-5:44:22 AM [vite] ✨ new dependencies optimized: gsap, gsap/ScrollTrigger
-5:44:22 AM [vite] ✨ optimized dependencies changed. reloading
