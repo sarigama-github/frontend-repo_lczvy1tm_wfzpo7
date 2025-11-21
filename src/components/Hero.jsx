@@ -1,21 +1,62 @@
 import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import Spline from '@splinetool/react-spline'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const glow = 'shadow-[0_0_50px_rgba(106,0,255,0.35)]'
 
 export default function Hero({ onScrollToServices }) {
   const containerRef = useRef(null)
+  const particlesRef = useRef(null)
 
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
+
     const handleScroll = () => {
       const y = window.scrollY
       el.style.setProperty('--parallax', Math.min(y / 600, 1))
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+
+    // Subtle particle drift using GSAP
+    const ctx = gsap.context(() => {
+      const dots = particlesRef.current?.querySelectorAll('.dot')
+      if (dots && dots.length) {
+        dots.forEach((d, i) => {
+          gsap.to(d, {
+            x: () => gsap.utils.random(-20, 20),
+            y: () => gsap.utils.random(-10, 10),
+            opacity: () => gsap.utils.random(0.3, 0.9),
+            duration: () => gsap.utils.random(3, 6),
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+            delay: i * 0.1,
+          })
+        })
+      }
+
+      // Hero content float on scroll
+      gsap.to('.hero-float', {
+        y: 30,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+    }, el)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      ctx.revert()
+    }
   }, [])
 
   return (
@@ -25,7 +66,23 @@ export default function Hero({ onScrollToServices }) {
         <Spline scene="https://prod.spline.design/yji5KWXyD-xKVkWj/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
 
-      {/* Purple gradient overlay for mood - don't block interactions */}
+      {/* Particle field overlay */}
+      <div ref={particlesRef} className="pointer-events-none absolute inset-0">
+        {Array.from({ length: 40 }).map((_, i) => (
+          <span
+            key={i}
+            className="dot absolute h-1.5 w-1.5 rounded-full bg-[#6A00FF]"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              filter: 'blur(0.5px)',
+              boxShadow: '0 0 12px rgba(106,0,255,0.8)'
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Purple gradient overlay for mood */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-[#0f0f12]/20 to-[#0f0f12]" />
 
       {/* Content */}
@@ -34,7 +91,7 @@ export default function Hero({ onScrollToServices }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="max-w-4xl"
+          className="max-w-4xl hero-float"
           style={{ transform: 'translateY(calc(var(--parallax, 0) * -30px))' }}
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs text-white/70 backdrop-blur-sm mb-6">

@@ -24,14 +24,14 @@ export default function Showcase() {
           {projects.map((p, i) => (
             <motion.article
               key={p.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40, rotateX: -8 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: i * 0.05 }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm will-change-transform"
             >
-              <div className="aspect-video overflow-hidden">
-                <img src={p.img} alt="Project" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]" />
+              <div className="aspect-video overflow-hidden perspective-[1200px]">
+                <img src={p.img} alt="Project" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.08] group-hover:rotate-1" />
               </div>
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(400px_200px_at_50%_80%,rgba(106,0,255,0.35),transparent)]" />
               <div className="absolute inset-x-0 bottom-0 p-5">
